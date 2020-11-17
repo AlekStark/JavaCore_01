@@ -1,12 +1,10 @@
-package com.company;
+package JavaCore_01;
 
-public class Task_01 {
+public class Task_02 {
     public static void main(String[] args) {
-        int i = 0;
         String  x = "JAVA";
-        while(i<10){
+        for(int i=0; i<10; i++){
             System.out.print(x + " ");
-            i++;
         }
     }
 }

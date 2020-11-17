@@ -1,12 +1,10 @@
-package com.company;
+package JavaCore_01;
 
-public class Task_04 {
+public class Task_05 {
     public static void main(String[] args) {
-        int year = 1980;
         int i = 4;
-        while(year<=2020){
+        for(int year = 1980; year<=2020; year=year+i){
             System.out.println("Олимпиада "+year + " года");
-            year=year+i;
         }
     }
 }

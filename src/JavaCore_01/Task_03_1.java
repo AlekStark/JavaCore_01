@@ -1,4 +1,4 @@
-package com.company;
+package JavaCore_01;
 
 public class Task_03_1 {
     public static void main(String[] args) {
