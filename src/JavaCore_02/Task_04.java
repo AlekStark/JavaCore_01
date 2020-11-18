@@ -1,7 +1,7 @@
 package JavaCore_02;
 
 import java.util.Scanner;
-import static java.lang.Math.*;
+import static java.lang.Math.pow;
 
 public class Task_04 {
     public static void main(String[] args) {
