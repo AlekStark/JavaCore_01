@@ -8,9 +8,9 @@ public class Task_03 {
         Scanner scanner = new Scanner(System.in);
         for(int i=0;i<=5;i++){
             z=0;
-            System.out.println("Введите делимое число:");
+            System.out.println("Введите делимое число: ");
             x = scanner.nextDouble();
-            System.out.println("Введите делитель:");
+            System.out.println("Введите делитель: ");
             y = scanner.nextDouble();
             if(y!=0)
                 z=1;
