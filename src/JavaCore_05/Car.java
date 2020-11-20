@@ -1,6 +1,6 @@
 package JavaCore_05;
 
-public class Car {
+class Car {
     private int yearOfIssue;
     private String carColor;
     private String carModel;

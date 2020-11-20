@@ -1,6 +1,6 @@
 package JavaCore_05;
 
-public class Motorbike {
+class Motorbike {
     private int year;
     private String color;
     private String model;
