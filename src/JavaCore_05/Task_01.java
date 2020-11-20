@@ -1,7 +1,5 @@
 package JavaCore_05;
 
-import java.util.Date;
-
 public class Task_01 {
     public static void main(String[] args) {
         Car car1 = new Car();
@@ -13,34 +11,6 @@ public class Task_01 {
         System.out.println("Модель автомобиля:" + car1.getModel());
     }
 }
-class Car{
-    private int yearOfIssue;
-    private String carColor;
-    private String carModel;
 
-    public void setYear(int year){
-        yearOfIssue = year;
-    }
-
-    public int getYearOfIssue() {
-        return yearOfIssue;
-    }
-
-    public void setColor(String color){
-        carColor = color;
-    }
-
-    public String getColor() {
-        return carColor;
-    }
-
-    public void setModel(String model){
-        carModel = model;
-    }
-
-    public String getModel() {
-        return carModel;
-    }
-}
 
 
