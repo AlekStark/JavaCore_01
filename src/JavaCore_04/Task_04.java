@@ -13,7 +13,7 @@ public class Task_04 {
          }
         System.out.println();
         for (int i=1; i<array.length-1; i++) {
-            arraySum=array[i]+array[i+1]+array[i-1];
+            arraySum=array[i-1]+array[i]+array[i+1];
             if(sBig<arraySum){
                 sBig=arraySum;
                 sBigNum=i-1;

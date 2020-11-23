@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 public class Task_01 {
     public static void main(String[] args) {
-        int sBig=0,sOne=0,sEven=0,sOdd=0;
+        int Big=0,One=0,Even=0,Odd=0;
         Scanner scanner = new Scanner(System.in);
         System.out.println("Введите размер массива:");
         int [] y = new int[scanner.nextInt()];
@@ -17,20 +17,20 @@ public class Task_01 {
         for (int i:y)
         {
             if (i>8)
-                sBig++;
+                Big++;
             if (i==1)
-                sOne++;
+                One++;
             if (i%2==0 && i!=0)
-                sEven++;
+                Even++;
             if (i%2!=0)
-                sOdd++;
+                Odd++;
         }
 
         System.out.println("Длине массива: " + y.length);
-        System.out.println("Количество чисел больше 8: " + sBig);
-        System.out.println("Количество чисел равных 1: " + sOne);
-        System.out.println("Количество четных чисел: " + sEven);
-        System.out.println("Количество нечетных чисел: " + sOdd);
+        System.out.println("Количество чисел больше 8: " + Big);
+        System.out.println("Количество чисел равных 1: " + One);
+        System.out.println("Количество четных чисел: " + Even);
+        System.out.println("Количество нечетных чисел: " + Odd);
         System.out.println("Сумма всех элементов массива: " + Arrays.stream(y).sum());
     }
 }

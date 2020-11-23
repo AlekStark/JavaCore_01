@@ -1,9 +1,9 @@
 package JavaCore_04;
 
-public class Task_02 {
+public class Task_02_1 {
     public static void main(String[] args) {
         int [] array = new int[100];
-        int Greatest=0,GreatNum=0,Least=1001,LeastNum=0, Quantity=0, QuantitySum=0;
+        int Greatest=Integer.MIN_VALUE, GreatNum=0, Least=Integer.MAX_VALUE,LeastNum=0, Quantity=0, QuantitySum=0;
         for(int i=0; i<array.length;i++) {
             array[i] = (int) (Math.random() * 1001);
             System.out.println(array[i]);
@@ -22,7 +22,7 @@ public class Task_02 {
                 Quantity++;
                 QuantitySum+=array[i];
             }
-          }
+        }
         System.out.println("Наибольшее значение: " + Greatest);
         System.out.println("Порядковый номер наибольшего значения: " + GreatNum);
         System.out.println("Наименьшее значение: " + Least);

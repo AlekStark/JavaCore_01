@@ -6,13 +6,13 @@ class Car {
     private String carModel;
 //сеттеры
     public void setYear(int year){
-        yearOfIssue = year;
+        this.yearOfIssue = year;
     }
     public void setColor(String color){
-        carColor = color;
+        this.carColor = color;
     }
     public void setModel(String model){
-        carModel = model;
+        this.carModel = model;
     }
 //геттеры
     public int getYearOfIssue() {
