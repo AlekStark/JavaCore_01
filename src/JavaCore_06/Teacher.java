@@ -15,7 +15,6 @@ public class Teacher {
     void evaluate(Student student){
         String studentName = student.getName();
 
-
         double appraisal = 2 + Math.random()*4;
         switch ((int)appraisal){
             case 2:
