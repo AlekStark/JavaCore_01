@@ -11,23 +11,27 @@ public class Teacher {
     public void setSubject(String subject){
         this.subject = subject;
     }
-    void evaluate(String student){
+
+    void evaluate(Student student){
+        String studentName = student.getName();
+
+
         double appraisal = 2 + Math.random()*4;
         switch ((int)appraisal){
             case 2:
-                System.out.println("Преподаватель "+name+" оценил студента с именем " +student+
+                System.out.println("Преподаватель "+name+" оценил студента с именем " +studentName+
                         " по предмету "+subject+" на оценку "+unsatisfactory+".");
                 break;
             case 3:
-                System.out.println("Преподаватель "+name+" оценил студента с именем " +student+
+                System.out.println("Преподаватель "+name+" оценил студента с именем " +studentName+
                         " по предмету "+subject+" на оценку "+satisfactorily+".");
                 break;
             case 4:
-                System.out.println("Преподаватель "+name+" оценил студента с именем " +student+
+                System.out.println("Преподаватель "+name+" оценил студента с именем " +studentName+
                         " по предмету "+subject+" на оценку "+good+".");
                 break;
             case 5:
-                System.out.println("Преподаватель "+name+" оценил студента с именем " +student+
+                System.out.println("Преподаватель "+name+" оценил студента с именем " +studentName+
                         " по предмету "+subject+" на оценку "+great+".");
                 break;
         }

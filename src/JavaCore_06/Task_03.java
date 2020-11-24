@@ -8,6 +8,6 @@ public class Task_03 {
 
         teacher.setName("Иванов");
         teacher.setSubject("История");
-        teacher.evaluate(student.getName());
+        teacher.evaluate(student);
     }
 }
