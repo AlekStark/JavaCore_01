@@ -9,6 +9,25 @@ class Airplane {
     private int weight;
     private int fuel;
 
+    public static void compareAirplanes(Airplane airplane1, Airplane airplane2){
+        if(airplane1.getLength()!=0 && airplane2.getLength()!=0){
+            if(airplane1.getLength()>airplane2.getLength()) {
+                System.out.println("Первый");
+            } else if (airplane1.getLength()<airplane2.getLength()){
+                System.out.println("Второй");
+            } else {
+                System.out.println("Равны");
+            }
+        }else {
+            System.out.println("Самолет(ы) угнали");
+        }
+
+    }
+
+    public int getLength() {
+        return length;
+    }
+
     public Airplane(String producer, int year, int length, int weight) {
         this.producer = producer;
         this.year = year;
