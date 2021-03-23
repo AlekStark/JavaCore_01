@@ -1,0 +1,1278 @@
+openapi: "3.0.3"
+info:
+  title: "JIRA Claim Microservice API"
+  description: "API сервиса регистрации и просмотра обращений клиента"
+  termsOfService: "urn:tos"
+  contact:
+    name: "Andrey Mikulov"
+    email: "mikulov.ae@vtb.ru"
+  version: "1.0.0"
+servers:
+  - url: "http://k4-jira-app.msk.vtb24.ru:8089"
+    description: "K4 server URL"
+tags:
+  - name: "jcms"
+    description: "JIRA Claim Microservice API"
+paths:
+  '/claim/submit':
+    post:
+      tags:
+        - "claim"
+      summary: "Регистрация нового обращения в JIRA"
+      description: "Метод вызывается для публикации заявки в JIRA"
+      operationId: "claimsSubmit"
+      parameters:
+        - name: "Authorization"
+          in: "header"
+          schema:
+            type: "string"
+        - name: "x-unc"
+          in: "header"
+          schema:
+            type: "string"
+        - name: "x-mdm-id"
+          in: "header"
+          schema:
+            type: "string"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Request"
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateClaimResponse"
+        201:
+          description: "Обращение зарегистрировано"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateClaimResponse"
+        400:
+          description: "Ошибки валидации"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateClaimResponse"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+        500:
+          description: "Что-то пошло не так"
+  '/claim/{issueId}/update':
+    put:
+      tags:
+        - "claim"
+      summary: "Обновление существующего обращения в JIRA"
+      description: "Метод вызывается для обновления обращения в JIRA"
+      operationId: "updateClaimById"
+      parameters:
+        - name: "issueId"
+          in: "path"
+          description: "Идентификатор обращения"
+          required: true
+          style: "simple"
+          schema:
+            type: "string"
+        - name: "Authorization"
+          in: "header"
+          schema:
+            type: "string"
+        - name: "x-unc"
+          in: "header"
+          schema:
+            type: "string"
+        - name: "x-mdm-id"
+          in: "header"
+          schema:
+            type: "string"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Request"
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UpdateClaimResponse"
+        400:
+          description: "Ошибки валидации"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UpdateClaimResponse"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+        500:
+          description: "Что-то пошло не так"
+  '/claim/draft':
+    post:
+      tags:
+        - "claim"
+      summary: "Регистрация черновика обращения в JIRA"
+      description: "Метод вызывается для сохранения черновика"
+      operationId: "claimsDraft"
+      parameters:
+        - name: "Authorization"
+          in: "header"
+          schema:
+            type: "string"
+        - name: "x-unc"
+          in: "header"
+          schema:
+            type: "string"
+        - name: "x-mdm-id"
+          in: "header"
+          schema:
+            type: "string"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Request"
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateDraftResponse"
+        201:
+          description: "Обращение зарегистрировано"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateDraftResponse"
+        400:
+          description: "Ошибки валидации"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateDraftResponse"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+        500:
+          description: "Что-то пошло не так"
+  '/claim/channel/{channel}/client/{clientId}/{issueId}/full':
+    get:
+      tags:
+        - "claim"
+      summary: "Получить полную информацию по обращению по идентификатору"
+      operationId: "getFullClaim"
+      parameters:
+        - name: "channel"
+          in: "path"
+          description: "Идентификатор канала обращения"
+          required: true
+          style: "simple"
+          schema:
+            type: "string"
+        - name: "clientId"
+          in: "path"
+          description: "Идентификатор клиента из канала"
+          required: true
+          style: "simple"
+          schema:
+            type: "string"
+        - name: "issueId"
+          in: "path"
+          description: "Идентификатор обращения"
+          required: true
+          style: "simple"
+          schema:
+            type: "string"
+        - name: "Authorization"
+          in: "header"
+          schema:
+            type: "string"
+        - name: "x-unc"
+          in: "header"
+          schema:
+            type: "string"
+        - name: "x-mdm-id"
+          in: "header"
+          schema:
+            type: "string"
+      responses:
+        200:
+          description: "Обращение"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ClaimFullResponse"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+  '/claim/channel/{channel}/client/{clientId}/{issueId}':
+    delete:
+      tags:
+        - "claim"
+      summary: "Установить статус Удалено для обращения в статусе Сохранено"
+      operationId: "deleteClaimById"
+      parameters:
+        - name: "channel"
+          in: "path"
+          description: "Идентификатор канала обращения"
+          required: true
+          style: "simple"
+          schema:
+            type: "string"
+        - name: "clientId"
+          in: "path"
+          description: "Идентификатор клиента из канала"
+          required: true
+          style: "simple"
+          schema:
+            type: "string"
+        - name: "issueId"
+          in: "path"
+          description: "Идентификатор обращения. Для зарегистрированного обращения это issueId, для незарегистрированного - draftId"
+          required: true
+          style: "simple"
+          schema:
+            type: "string"
+        - name: "Authorization"
+          in: "header"
+          schema:
+            type: "string"
+        - name: "x-unc"
+          in: "header"
+          schema:
+            type: "string"
+      responses:
+        200:
+          description: "Статус Удалено установлен"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeleteClaimResponse"
+        400:
+          description: "Ошибки валидации"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+  '/claim/{issueId}/comment':
+    post:
+      tags:
+        - "claim"
+      summary: "Добавление комментария к обращению"
+      description: "Метод вызывается для добавления комментария к обращению"
+      operationId: "addComment"
+      parameters:
+        - name: "issueId"
+          in: "path"
+          description: "Идентификатор обращения"
+          required: true
+          style: "simple"
+          schema:
+            type: "string"
+        - name: "Authorization"
+          in: "header"
+          schema:
+            type: "string"
+        - name: "x-unc"
+          in: "header"
+          schema:
+            type: "string"
+        - name: "x-mdm-id"
+          in: "header"
+          schema:
+            type: "string"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RequestComment"
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CommentOrRevokeToClaimResponse"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+        500:
+          description: "Что-то пошло не так"
+  '/claim/{issueId}/appeal':
+    post:
+      tags:
+        - "claim"
+      summary: "Подача апелляции к обращению"
+      description: "Метод вызывается для подачи апелляции к обращению"
+      operationId: "appealClaimById"
+      parameters:
+        - name: "issueId"
+          in: "path"
+          description: "Идентификатор обращения"
+          required: true
+          style: "simple"
+          schema:
+            type: "string"
+        - name: "Authorization"
+          in: "header"
+          schema:
+            type: "string"
+        - name: "x-unc"
+          in: "header"
+          schema:
+            type: "string"
+        - name: "x-mdm-id"
+          in: "header"
+          schema:
+            type: "string"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RequestAppeal"
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AppealClaimResponse"
+        400:
+          description: "Ошибки валидации"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AppealClaimResponse"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+        500:
+          description: "Что-то пошло не так"
+  '/claim/{issueId}/revoke':
+    post:
+      tags:
+        - "claim"
+      summary: "Отзыв обращения"
+      description: "Метод вызывается для отзыва обращения"
+      operationId: "revokeClaim"
+      parameters:
+        - name: "issueId"
+          in: "path"
+          description: "Идентификатор обращения"
+          required: true
+          style: "simple"
+          schema:
+            type: "string"
+        - name: "Authorization"
+          in: "header"
+          schema:
+            type: "string"
+        - name: "x-unc"
+          in: "header"
+          schema:
+            type: "string"
+        - name: "x-mdm-id"
+          in: "header"
+          schema:
+            type: "string"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RequestComment"
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CommentOrRevokeToClaimResponse"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+        500:
+          description: "Что-то пошло не так"
+  /claims/search/{channel}/client/{clientId}:
+    get:
+      tags:
+        - "claims"
+      summary: "Поиск обращений клиента"
+      operationId: "claimsSearch"
+      parameters:
+        - name: "channel"
+          in: "path"
+          description: "Идентификатор канала обращения"
+          required: true
+          style: "simple"
+          schema:
+            type: "string"
+        - name: "clientId"
+          in: "path"
+          description: "Идентификатор клиента из канала"
+          required: true
+          style: "simple"
+          schema:
+            type: "string"
+        - name: "globalId"
+          in: "query"
+          description: "Глобальный идентификатор клиента"
+          required: false
+          style: "form"
+          schema:
+            type: "string"
+        - name: "monthFromCreation"
+          in: "query"
+          description: "Глубина поиска обращений, задается или дата или глубина поиска"
+          required: false
+          style: "form"
+          schema:
+            type: "integer"
+            format: "int32"
+        - name: "dateFrom"
+          in: "query"
+          description: "Дата начала с которой искать обращения, задается или дата или глубина поиска"
+          required: false
+          example: "2006-12-31"
+          style: "form"
+          schema:
+            type: "string"
+            format: "date"
+        - name: "status"
+          in: "query"
+          description: "Массив статусов в которых должны быть обращения"
+          required: false
+          style: "form"
+          explode: true
+          schema:
+            type: "array"
+            items:
+              type: "string"
+        - name: "Authorization"
+          in: "header"
+          schema:
+            type: "string"
+        - name: "x-unc"
+          in: "header"
+          schema:
+            type: "string"
+        - name: "x-mdm-id"
+          in: "header"
+          schema:
+            type: "string"
+      responses:
+        200:
+          description: "Список обращений клиента"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SearchResponse"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+  '/handbook/channel/{channel}/code/{handbookId}':
+    get:
+      tags:
+        - claims
+      summary: Получить справочник
+      description: Получение справочников (включая многоуровневую структуру классификации обращений)
+      operationId: getHandbook
+      parameters:
+        - name: channel
+          in: path
+          description: Идентификатор канала
+          required: true
+          style: simple
+          schema:
+            type: string
+        - name: handbookId
+          in: path
+          description: Идентификатор справочника (н-р 'classifier')
+          required: true
+          style: simple
+          schema:
+            type: string
+        - name: clientType
+          in: query
+          description: Фильтр по типу клиента, при необходимости (физическое лицо, юридическое лицо)
+          required: false
+          style: form
+          schema:
+            type: string
+        - name: forClient
+          in: query
+          description: Фильтр по существованию клиента, при необходимости (клиент, не клиент)
+          required: false
+          style: form
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Handbook"
+        '201':
+          description: Классфификатор по типу
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Handbook"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+components:
+  schemas:
+    Request:
+      type: "object"
+      title: "Request"
+      description: "Данные запроса на сохранение или регистрацию обращения"
+      properties:
+        client:
+          $ref: "#/components/schemas/Client"
+        claim:
+          $ref: "#/components/schemas/Claim"
+        financial:
+          $ref: "#/components/schemas/Financial"
+        progress:
+          $ref: "#/components/schemas/Progress"
+        operations:
+          type: "array"
+          description: "Данные по претензионным операциям"
+          items:
+            $ref: "#/components/schemas/Operations"
+        cash:
+          type: "array"
+          description: "Данные о наличных купюрах"
+          items:
+            $ref: "#/components/schemas/Cash"
+        externalId:
+          type: "string"
+          description: "Внешний идентификатор в канале регистрации"
+        channel:
+          type: "string"
+          description: "Канал запроса"
+        draftId:
+          type: "string"
+          description: "Идентификатор обращения в БД микросервиса"
+        userId:
+          type: "string"
+          description: "Автор запроса (вне регистрации используется для аудита)"
+        userMail:
+          type: "string"
+          description: "Почтовый адрес автора запроса"
+        userName:
+          type: "string"
+          description: "Имя автора запроса"
+      required:
+        - "channel"
+        - "externalId"
+    Client:
+      type: "object"
+      title: "Client"
+      description: "Данные о клиенте"
+      properties:
+        globalId:
+          type: "string"
+          description: "Глобальный идентификатор клиента (МДМ/ПКБ)"
+          example: "XXXXX-XXXXX-XXXXX-XXXXX"
+        mobileId:
+          type: "string"
+          description: "УНК клиента Обязательно для МБ\\ИБ"
+          example: "XXXXXXXXXX"
+        clientId:
+          type: "string"
+          description: "Идентификатор клиента из канала"
+          example: "XXXXX-XXXXX-XXXXX-XXXXX"
+        frontalId:
+          type: "string"
+          description: "Идентификатор клиента во фронтальной системе"
+          example: "XXXXXXXXXX"
+        INN:
+          type: "string"
+          description: "Индивидуальный налоговый номер"
+          example: "3664069397"
+        clientType:
+          type: "string"
+          description: "Тип клиента (статус)"
+          example: "Физ. лицо"
+        clientName:
+          type: "string"
+          description: "Наименование клиента"
+        lastName:
+          type: "string"
+          description: "Фамилия"
+          example: "Иванов"
+        firstName:
+          type: "string"
+          description: "Имя"
+          example: "Иван"
+        middleName:
+          type: "string"
+          description: "Отчество"
+          example: "Иванович"
+        gender:
+          type: "string"
+          description: "Пол"
+          example: "Муж"
+        birthDate:
+          type: "string"
+          format: "date"
+          description: "Дата рождения"
+          example: "1980-01-01"
+        citizenship:
+          type: "string"
+          description: "Гражданство"
+          example: "Россия"
+        residency:
+          type: "string"
+          description: "Резидентство"
+          example: "нерезидент"
+        vipType:
+          type: "string"
+          description: "Тип VIP-клиента"
+          example: "vip"
+        servicePackage:
+          type: "array"
+          items:
+            type: "string"
+          description: "Пакеты клиента"
+          example: "[\"Пакет1\",\"Пакет2\",\"Пакет3\"]"
+        vtbEmployee:
+          type: "string"
+          description: "Сотрудник группы ВТБ"
+          example: "Не сотрудник ВТБ24"
+        phoneNumber:
+          type: "string"
+          description: "Контактный телефон"
+          example: "84128080800"
+        email:
+          type: "string"
+          description: "Электронная почта"
+          example: "test@test.ru"
+        docType:
+          type: "string"
+          description: "Тип документа, удостоверяющего личность (ДУЛ)"
+          example: "21"
+        docSeries:
+          type: "string"
+          description: "Серия ДУЛ"
+          example: "8888"
+        docNumber:
+          type: "string"
+          description: "Номер ДУЛ"
+          example: "123456"
+        docIssuedBy:
+          type: "string"
+          description: "Кем выдан ДУЛ"
+          example: "Московским РУВД №1 г. Москвы"
+        docIssueDate:
+          type: "string"
+          format: "date"
+          description: "Дата выдачи ДУЛ"
+          example: "1990-01-01"
+        zipCode:
+          type: "string"
+          description: "Индекс"
+          example: "190000"
+        state:
+          type: "string"
+          description: "Регион"
+          example: "Центральный Федеральный округ"
+        district:
+          type: "string"
+          description: "Район"
+          example: "Урюпинский район"
+        city:
+          type: "string"
+          description: "Город"
+          example: "Москва"
+        community:
+          type: "string"
+          description: "Населенный пункт"
+          example: "Борки"
+        street:
+          type: "string"
+          description: "Улица"
+          example: "ул. Рижская"
+        house:
+          type: "string"
+          description: "Дом"
+          example: "6"
+        building:
+          type: "string"
+          description: "Корпус"
+          example: "3"
+        apartment:
+          type: "string"
+          description: "Квартира"
+          example: "88"
+    Claim:
+      type: "object"
+      title: "Claim"
+      description: "Основные данные обращения"
+      properties:
+        claimType:
+          type: "string"
+          description: "Тип обращения"
+          example: "Жалоба"
+        claimSubType:
+          type: "string"
+          description: "Подтип обращения"
+          example: "Жалоба на обслуживание"
+        product:
+          type: "string"
+          description: "Продукт"
+          example: "Обслуживание в Офисе банка"
+        problemType:
+          type: "string"
+          description: "Проблема"
+          example: "Пожаловаться на сотрудника"
+        problemSubType:
+          type: "string"
+          description: "Ситуация по проблеме"
+          example: "Иное"
+        createDate:
+          type: "string"
+          format: "date-time"
+          description: "Дата создания обращения"
+        title:
+          type: "string"
+          description: "Требование клиента"
+          example: "Краткое описание проблемы"
+        description:
+          type: "string"
+          description: "Суть обращения"
+          example: "Полное описание проблемы с подробностями"
+        office:
+          type: "array"
+          items:
+            type: "string"
+          description: "Точка обслуживания или филиал"
+        serviceDate:
+          type: "string"
+          format: "date-time"
+          description: "Дата и время обслуживания"
+        notifyChannel:
+          type: "string"
+          description: "Оповещение клиента"
+        businessLoungeDate:
+          type: "string"
+          format: "date-time"
+          description: "Время и дата обращения в бизнес-зал (заявленное клиентом)"
+        businessLoungeVisits:
+          type: "number"
+          description: "Количество проходов в бизнес-зал (заявленное клиентом)"
+          example: 3
+        businessLoungeGuests:
+          type: "number"
+          description: " Количество проходов гостей в бизнес-зал (заявленное клиентом)"
+          example: 2
+        requestedFields:
+          type: "array"
+          items:
+            type: "string"
+          description: "Список обязательных к заполнению полей, при наличии"
+      required:
+        - "claimType"
+        - "claimSubType"
+        - "product"
+    Financial:
+      type: "object"
+      title: "Financial"
+      description: "Данные с финансовой информацией"
+      properties:
+        branchCode:
+          type: "string"
+          description: "Код филиала (для зачисления)"
+        officeCode:
+          type: "string"
+          description: "Код офиса (ТП обслуживания)"
+        agreementNumber:
+          type: "string"
+          description: "Номер договора"
+        bankId:
+          type: "string"
+          description: "БИК счета продукта клиента"
+        accountNumber:
+          type: "string"
+          description: "Счет продукта"
+        cardNumber:
+          type: "string"
+          description: "Номер карты"
+        deviceNumber:
+          type: "number"
+          description: "№ АТМ"
+        operationPlace:
+          type: "string"
+          description: "Место операции"
+        operationDate:
+          type: "string"
+          format: "date-time"
+          description: "Дата и время операции"
+        operationsCount:
+          type: "number"
+          description: "Количество операций"
+        payeeName:
+          type: "string"
+          description: "Наименование получателя платежа"
+        paidPhoneNumber:
+          type: "string"
+          description: "Номер пополняемого телефона"
+        operationAmount:
+          type: "number"
+          description: "Сумма в валюте платежа"
+        operationCurrency:
+          type: "string"
+          description: "Валюта платежа"
+        cardAmount:
+          type: "number"
+          description: "Сумма в валюте карты"
+        cardCurrency:
+          type: "string"
+          description: "Валюта карты"
+        disputeAmount:
+          type: "number"
+          description: "Сумма в валюте требования"
+        disputeCurrency:
+          type: "string"
+          description: "Валюта требования"
+        payoutType:
+          type: "string"
+          description: "Порядок выплаты"
+        payoutSystem:
+          type: "string"
+          description: "Система ведения продукта / карты для выплаты"
+        payoutAccount:
+          type: "string"
+          description: "Счет для выплаты"
+    Progress:
+      type: "object"
+      title: "Progress"
+      description: "Информация по рассмотрению обращения"
+      properties:
+        plannedTerm:
+          type: "string"
+          format: "date-time"
+          description: "Планируемый срок рассмотрения"
+        closeDate:
+          type: "string"
+          format: "date-time"
+          description: "Дата закрытия обращения"
+        assigneeId:
+          type: "string"
+          description: "Идентификатор исполнителя"
+        assigneeMail:
+          type: "string"
+          description: "Почтовый адрес исполнителя"
+        assigneeName:
+          type: "string"
+          description: "Имя исполнителя"
+        shortMessage:
+          type: "string"
+          description: "Последнее SMS для клиента"
+        resolutionDate:
+          type: "string"
+          format: "date-time"
+          description: "Дата решения по запросу"
+        onlineDecision:
+          type: "string"
+          description: "Признак онлайн-решения"
+        decision:
+          type: "string"
+          description: "Решение"
+        businessDecision:
+          type: "string"
+          description: "Бизнес-решение"
+        businessDecisionDate:
+          type: "string"
+          format: "date-time"
+          description: "Дата принятия бизнес-решения"
+        businessDecisionAuthor:
+          type: "string"
+          description: "Лицо, принявшее бизнес решение"
+        payoutSource:
+          type: "string"
+          description: "Источник выплаты (Основание для выплаты)"
+        payoutInLimit:
+          type: "string"
+          description: "Выплаты в пределах лимита"
+        payoutAmount:
+          type: "number"
+          description: "Сумма выплаты"
+        payoutCurrency:
+          type: "string"
+          description: "Валюта выплаты"
+        answer:
+          type: "string"
+          description: "Ответ клиенту"
+    Operations:
+      type: "object"
+      title: "Operations"
+      description: "Данные по претензионным операциям"
+      properties:
+        type:
+          type: "string"
+          description: "Тип операции"
+        authorization:
+          type: "boolean"
+          description: "Признак авторизации без подтверждения"
+          example: false
+        authorizationCode:
+          type: "string"
+          description: "Код авторизации по карточной операции"
+        rrn:
+          type: "string"
+          description: "RRN (Reference Retrieval Number)"
+        operationDate:
+          type: "string"
+          format: "date-time"
+          description: "Дата и время операции"
+        amount:
+          type: "number"
+          description: "Сумма операции"
+        currency:
+          type: "string"
+          description: "Валюта операции"
+        amountDebited:
+          type: "number"
+          description: "Сумма в валюте карты/счета"
+        countryCode:
+          type: "string"
+          description: "Код страны эквайера"
+        place:
+          type: "string"
+          description: "Место совершения операции – Город/Регион/ФО"
+        device:
+          type: "string"
+          description: "Тип устройства"
+        confirmation:
+          type: "string"
+          description: "Способ дополнительного подтверждения операции"
+        payeeBankId:
+          type: "string"
+          description: "БИК банка получателя"
+        payeeAccount:
+          type: "string"
+          description: "Номер карты/счета получателя"
+        documentNumber:
+          type: "string"
+          description: "Номер платежного документа"
+    Cash:
+      type: "object"
+      title: "Cash"
+      description: "Данные о наличных купюрах"
+      properties:
+        nominal:
+          type: "number"
+          description: "Номинал купюр"
+        counts:
+          type: "number"
+          description: "Количество купюр"
+    Comment:
+      type: "object"
+      title: "Comment"
+      description: "Данные о комментариях"
+      properties:
+        text:
+          type: "string"
+          description: "Комментарий к обращению"
+        visibility:
+          type: "string"
+          description: "Видимость комментария"
+    ClaimFullResponse:
+      description: "Полная информация по обращению"
+      allOf:
+        - $ref: "#/components/schemas/Request"
+        - type: "object"
+          properties:
+            decision:
+              type: "string"
+              description: "Решение"
+            answer:
+              type: "string"
+              description: "Ответ клиенту"
+            shortMessage:
+              type: "string"
+              description: "SMS для клиента"
+            issueId:
+              type: "string"
+              description: "Идентификатор обращения"
+            closeDate:
+              type: "string"
+              description: "Дата закрытия обращения"
+              format: "date-time"
+            status:
+              type: "string"
+              description: "Статус обращения"
+    RequestComment:
+      description: "Обращение с комментарием"
+      allOf:
+        - $ref: "#/components/schemas/Request"
+        - type: "object"
+          properties:
+            comment:
+              type: "object"
+              $ref: "#/components/schemas/Comment"
+              description: "Комментарий к обращению"
+    RequestAppeal:
+      description: "Апелляция к обращению"
+      allOf:
+        - $ref: "#/components/schemas/RequestComment"
+        - type: "object"
+          properties:
+            reason:
+              type: "string"
+              description: "Причина апелляции"
+    CreateClaimResponse:
+      type: "object"
+      title: "CreateClaimResponse"
+      description: "Ответ на запрос создания обращения"
+      properties:
+        errors:
+          type: "array"
+          items:
+            type: "string"
+          description: "Список ошибок, при наличии"
+        createDate:
+          type: "string"
+          description: "Дата создания обращения"
+          format: "date-time"
+        externalId:
+          type: "string"
+          description: "Идентификатор запроса"
+        shortMessage:
+          type: "string"
+          description: "SMS для клиента"
+        issueId:
+          type: "string"
+          description: "Идентификатор обращения в JIRA (CR-x)"
+        status:
+          type: "string"
+          description: "Статус обращения"
+        plannedTerm:
+          type: "string"
+          format: "date"
+          description: "Планируемый срок рассмотрения"
+    UpdateClaimResponse:
+      type: "object"
+      title: "UpdateClaimResponse"
+      description: "Ответ на запрос обновления обращения"
+      properties:
+        errors:
+          type: "array"
+          items:
+            type: "string"
+          description: "Список ошибок, при наличии"
+        createDate:
+          type: "string"
+          description: "Дата обновления обращения"
+          format: "date-time"
+        externalId:
+          type: "string"
+          description: "Идентификатор запроса"
+        shortMessage:
+          type: "string"
+          description: "SMS для клиента"
+        issueId:
+          type: "string"
+          description: "Идентификатор обращения в JIRA (CR-x)"
+    AppealClaimResponse:
+      type: "object"
+      title: "AppealClaimResponse"
+      description: "Ответ на запрос апелляции к обращению"
+      properties:
+        errors:
+          type: "array"
+          items:
+            type: "string"
+          description: "Список ошибок, при наличии"
+        createDate:
+          type: "string"
+          description: "Дата подачи апелляции"
+          format: "date-time"
+        externalId:
+          type: "string"
+          description: "Идентификатор запроса"
+        shortMessage:
+          type: "string"
+          description: "SMS для клиента"
+        issueId:
+          type: "string"
+          description: "Идентификатор обращения в JIRA (CR-x)"
+    CreateDraftResponse:
+      type: "object"
+      title: "CreateDraftResponse"
+      description: "Ответ на запрос создания черновика"
+      properties:
+        errors:
+          type: "array"
+          items:
+            type: "string"
+          description: "Список ошибок, при наличии"
+        createDate:
+          type: "string"
+          description: "Дата создания черновика"
+          format: "date-time"
+        externalId:
+          type: "string"
+          description: "Идентификатор запроса"
+        draftId:
+          type: "string"
+          description: "Идентификатор черновика"
+        status:
+          type: "string"
+          description: "Статус обращения"
+    DeleteClaimResponse:
+      title: "DeleteClaimResponse"
+      description: "Информация по удаленному обращению"
+      type: "object"
+      properties:
+        issueId:
+          type: "string"
+          description: "Идентификатор обращения в JIRA (CR-x)/draftId"
+        answer:
+          type: "string"
+          description: "Текстовый ответ"
+    CommentOrRevokeToClaimResponse:
+      title: "CommentOrRevokeToClaimResponse"
+      description: "Информация по добавлению комментария к обращению"
+      type: "object"
+      properties:
+        errors:
+          type: "array"
+          items:
+            type: "string"
+          description: "Список ошибок, при наличии"
+        createDate:
+          type: "string"
+          description: "Дата создания обращения"
+          format: "date-time"
+        issueId:
+          type: "string"
+          description: "Идентификатор обращения в JIRA (CR-x)"
+        answer:
+          type: "string"
+          description: "Текстовый ответ"
+    SearchResponse:
+      type: "object"
+      title: "SearchResponse"
+      description: "Результаты поиска обращений клиента"
+      properties:
+        items:
+          type: "array"
+          description: "Сводка по найденному обращению"
+          items:
+            $ref: "#/components/schemas/SearchResponseItem"
+    SearchResponseItem:
+      type: "object"
+      title: "SearchResponseItem"
+      description: "Сводка по найденному обращению"
+      properties:
+        issueId:
+          type: "string"
+          description: "Идентификатор обращения в JIRA (CR-x)"
+        claimType:
+          type: "string"
+          description: "Тип обращения"
+        claimSubType:
+          type: "string"
+          description: "Подтип обращения"
+        product:
+          type: "string"
+          description: "Продукт"
+        problemType:
+          type: "string"
+          description: "Проблема"
+        problemSubType:
+          type: "string"
+          description: "Ситуация по проблеме"
+        createDate:
+          type: "string"
+          description: "Дата создания обращения"
+          format: "date-time"
+        closeDate:
+          type: "string"
+          description: "Дата закрытия обращения"
+          format: "date-time"
+        status:
+          type: "string"
+          description: "Статус обращения"
+        decision:
+          type: "string"
+          description: "Решение"
+    Handbook:
+      title: "Handbook"
+      description: "Справочник"
+      type: "object"
+      properties:
+        items:
+          description: "Запись справочника"
+          type: "array"
+          items:
+            $ref: "#/components/schemas/HandbookItem"
+        count:
+          type: "number"
+          description: "Количество записей"
+    HandbookItem:
+      title: "HandbookItem"
+      description: "Запись справочника"
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+          description: "id значения"
+          example: 2
+        parentId:
+          type: "number"
+          format: "int64"
+          description: "id родительского значения"
+        title:
+          type: "string"
+          description: "Значение"
+          example: "Жалоба"
+        level:
+          type: "number"
+          description: "Уровень в иерархии"
+          example: "1"
+        sequence:
+          type: "number"
+          description: "Очередность при сортировке"
+          example: "2"
